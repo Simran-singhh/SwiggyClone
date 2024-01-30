@@ -1,6 +1,6 @@
 
 import { MENU_URL } from './constants'
-import React, { useEffect,useState } from 'react'
+import  { useEffect,useState } from 'react'
 
 
 const useRestaurantMenu = (resId) => {
@@ -13,8 +13,8 @@ const useRestaurantMenu = (resId) => {
   const fetchMenu=async()=>{
     const data=await fetch(MENU_URL + resId)
     const json=await data.json();
-    console.log(json)
-    console.log(json.data.cards);
+    // console.log(json)
+    // console.log(json.data.cards);
     setresInfo(json?.data?.cards)
    
   }

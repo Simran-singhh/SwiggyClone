@@ -5,22 +5,22 @@ import useRestaurantMenu from '../utils/useRestaurantMenu'
 import RestaurantCategory from './RestaurantCategory'
 
 const RestaurantMenu = () => {
-
+    
  
   const{resId}=useParams();
   const resInfo=useRestaurantMenu(resId)
   const[ShowIndex,setShowIndex]=useState(null);
-
-  if(resInfo.length==0) return <Shimmer/>
+  
+  if(resInfo.length==0) return
 
   const{name,costForTwoMessage,cuisines,locality,feeDetails,sla,avgRating}=resInfo[0].card.card.info
   const{itemCards}=resInfo[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card;
-  console.log("itemCards",resInfo[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2].card.card.itemCards)
-  console.log(itemCards)
+  // console.log("itemCards",resInfo[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2].card.card.itemCards)
+  // console.log(itemCards)
 
   const categories=resInfo[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter((c)=>
     c?.card?.card?.["@type"]=="type.googleapis.com/swiggy.presentation.food.v2.ItemCategory");
-   console.log(categories);
+  //  console.log(categories);
 
    
 
@@ -53,18 +53,7 @@ const RestaurantMenu = () => {
        <svg xmlns="http://www.w3.org/2000/svg"  className='inline-block mr-2' height="16" width="16" viewBox="0 0 512 512"><path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
         <span className='mr-5'>{sla.slaString}</span>
        </div>
-       {/* <h3>cuisines</h3>
-       <ul>{cuisines.map((cuisine)=><li>{cuisine}</li>)}</ul>
-     
-      { itemCards!=null ?(<div>
-       <h4>Recommended</h4>
-       <ul>{itemCards.map((item)=><li>{item?.card?.info?.name}  -Rs.{item?.card?.info?.price/100}</li>)}</ul>
-       </div>)
-       :(<h1>No recommends</h1>)} */}
-
-       
-       {/* //categories accordian */}
-
+      
        {categories.map((c,index)=>{
         return <RestaurantCategory data={c?.card?.card} showItems={ShowIndex===index?true:false} setIndex={()=>ShowIndex!=null?setShowIndex(null):setShowIndex(index)}/>
        })}

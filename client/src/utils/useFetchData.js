@@ -1,7 +1,10 @@
 import React from 'react'
 import { useEffect,useState } from 'react';
+import { useDispatch } from 'react-redux';
+
 
 const useFetchData = () => {
+  const dispatch=useDispatch()
  const[ListOfRestaurant,setListOfRestaurant]=useState([]);
  useEffect(()=>{
     fetchData();
@@ -14,12 +17,13 @@ const useFetchData = () => {
     const json=await data.json();
      console.log("data fetched")
      console.log("json",json);
-      console.log("filtered",json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-    setListOfRestaurant(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+      console.log("filtered",json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    setListOfRestaurant(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
     // setFilteredRestaurant(json?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
-   
+     
     
   }
+  
   return  ListOfRestaurant;
 }
 

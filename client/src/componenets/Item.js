@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 import { CDN_URL } from '../utils/constants'
-import { addItem,removeitem } from '../utils/cartSlice'
+import { addItem,decitem,incitem,removeitem } from '../utils/cartSlice'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
+import useAddToDB from '../utils/useaddToDB'
+import useDeleteFromDB from '../utils/useDeleteFromDB'
+import useUpdateToDB from '../utils/useUpdateToDB'
+
 const Item = ({item}) => {
+  const dispatch=useDispatch();
     const{name,description,ratings,price,imageId,defaultPrice,isVeg,id}=item?.card?.info
     const[quantity,setquantity]=useState(0);
     const cartItems=useSelector((store)=>store.cart.items)
@@ -13,25 +18,33 @@ const Item = ({item}) => {
         setquantity(cartItems[id].quantity);
         }
     })
-    
-  
-const dispatch=useDispatch();
-const handleAdditems=(item,val)=>{
-  dispatch(addItem(item));
+   
+  const handleAdditems=async(item,val)=>{
+   if(val==0){
+   useAddToDB(item,val+1).then((d)=>dispatch(addItem(d.savedItem)));}
+    else
+   {useUpdateToDB(item,val+1,cartItems[id].dbid)
+    dispatch(incitem(item));
+   }
   setquantity(val+1)
- }
+   }
 
  const handleRemoveItem = (item,val) => {
- dispatch(removeitem(item))
+ if(val==1)
+  useDeleteFromDB(item,cartItems[id].dbid);
+  else 
+  useUpdateToDB(item,val-1,cartItems[id].dbid)
+  dispatch(decitem(item));
+ 
  setquantity(val-1)
-}
+ }
  
 
 
 
-   return( <div className=' flex flex-row justify-between mt-8 p-4  bg-gray-100'>
+   return( <div className=' flex flex-row justify-between mt-8 p-4  bg-gray-50 border-b-grey border-b-2 border-dotted ' >
       
-       <div className='w-8/12 mt-3'>
+       <div className='w-8/12 mt-3 '>
        {  isVeg==1?
         <svg xmlns="http://www.w3.org/2000/svg" className='fill-green-500 mb-2' height="16" width="16" viewBox="0 0 512 512"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/></svg>
        :<svg xmlns="http://www.w3.org/2000/svg" height="16" className='fill-red-500 mb-2' width="16" viewBox="0 0 512 512"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/></svg>

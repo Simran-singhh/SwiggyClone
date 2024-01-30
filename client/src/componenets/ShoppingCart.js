@@ -1,24 +1,44 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux";
-import { addItem ,removeitem} from '../utils/cartSlice';
+import { addItem ,decitem,emptycart, incitem} from '../utils/cartSlice';
+import { Link } from 'react-router-dom';
+import useUpdateToDB from '../utils/useUpdateToDB';
+import useDeleteFromDB from '../utils/useDeleteFromDB';
+import useEmptyCartDB from '../utils/useEmptyCartDB';
 
 const ShoppingCart = () => {
   const cartItems=useSelector((store)=>store.cart.items)
   const dispatch=useDispatch();
-
+  
 
    const handleAdditems=(item)=>{
-    dispatch(addItem(item));
+    console.log(item)
+    const{id}=item[0]?.card?.info
+    const val=cartItems[id].quantity
+    const _id=cartItems[id].dbid
+    useUpdateToDB(item,val+1,_id)
+    dispatch(incitem(item[0]));
    }
 
    const handleRemoveItem = (item) => {
-   dispatch(removeitem(item))
-  }
-
-
+    const{id}=item[0]?.card?.info
+    const val=cartItems[id].quantity
+    const _id=cartItems[id].dbid
+    if(val==1)
+    useDeleteFromDB(item,_id);
+    else
+    useUpdateToDB(item,val-1,_id)
+    dispatch(decitem(item[0]));
+   }
+   const handleCheckoutClick=()=>{
+    dispatch(emptycart())
+    useEmptyCartDB();
+   }
+   
+  const delievery_fee=40
    let total=0;
     const isCartEmpty = cartItems &&Object.keys(cartItems).length === 0;
-  
+   
   if(isCartEmpty===false)
   return (
     <div className=' w-7/12 bg-slate-50 ml-[300px] mt-12 p-4 shadow-lg'> 
@@ -30,7 +50,7 @@ const ShoppingCart = () => {
         {Object.keys(cartItems).map((itemId, index) => {
           const eachItem=cartItems[itemId]
           console.log("eachitem",eachItem)
-       const{name,price,defaultPrice,isVeg,id}=eachItem.card.info;
+       const{name,price,defaultPrice,isVeg,id}=eachItem[0]?.card?.info;
         total+=price!=null?price/100:defaultPrice/100;
         total*=eachItem.quantity;
        return (
@@ -51,7 +71,7 @@ const ShoppingCart = () => {
                   <button onClick={()=>handleAdditems(eachItem)}>+</button>
                 </div>
                 </div>
-                <p>Rs.{price!=null?price/100:defaultprice/100}</p>
+                <p>Rs.{price!=null?(price/100)*eachItem.quantity:(defaultPrice/100)*eachItem.quantity}</p>
              </div>
              
         )
@@ -60,11 +80,18 @@ const ShoppingCart = () => {
        <p className='font-semibold mt-10 ml-10 '> Bill details </p>
        <div className='font-light mt-3 ml-10  flex flex-row justify-between'>
          <p>Item Total</p>
-         <p>{total}</p>
+         <p>Rs. {total}</p>
        </div>
        <div className='font-light mt-3 ml-10  flex flex-row justify-between'>
-         <p>Delievery Fee|</p>
-         <p>{total}</p>
+         <p>Delievery Fee</p>
+         <p>Rs. 40</p>
+       </div>
+       <div className='font-light mt-3 pt-2 ml-10 border-t-slate-200 border-t-2  border-dotted  flex flex-row justify-between'>
+         <p>Grand Total</p>
+         <p>Rs. {delievery_fee+total}</p>
+       </div>
+       <div className='mt-3 pt-2 ml-20 pl-10 my-5'>
+       <Link to="/orderplaced"><button className='bg-orange-400 p-2 hover:bg-orange-600' onClick={handleCheckoutClick}>Proceed to CheckOut</button></Link>
        </div>
        </div>
     </div>

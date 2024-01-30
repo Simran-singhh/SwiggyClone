@@ -2,7 +2,7 @@ import React from 'react'
 import Item from './Item'
 
 const ItemsList = ({items}) => {
- console.log("items",items)
+ 
 
   return (
     <div>

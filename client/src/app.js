@@ -10,28 +10,27 @@ import { Provider } from 'react-redux';
 
 import { createBrowserRouter,RouterProvider,Outlet } from 'react-router-dom';
 import RestaurantMenu from './componenets/RestaurantMenu';
-import userContext from './utils/userContext';
-import appStore from './utils/appStore';
 
+import appStore from './utils/appStore';
+import LoginWrapper from './componenets/LoginWrapper';
 import ShoppingCart from './componenets/ShoppingCart';
+
+import OrderPlaced from './componenets/OrderPlaced';
+import Login from './componenets/Login';
+
 const AppLayout=()=>{
 
-    const[userName,setuserName]=useState(null);
-    useEffect(()=>{
-    const data={
-     name:"Tanya"
-    }
-    setuserName(data.name)
-    ,[]})
+   
+    
     
     return(
         <Provider store={appStore}>
-        <userContext.Provider value={{loggedUser:userName}}>
+       
         <div className='app'>
               <Header/>
               <Outlet/>
         </div>
-        </userContext.Provider>
+      
         </Provider>
     )
 }
@@ -41,9 +40,13 @@ const appRouter=createBrowserRouter([
         element:<AppLayout/>,
         children:[
             {
-              path:"/",
+              path:"/home",
               element:<Body/>
             },
+            {
+                path: '/login',
+                element: <Login />, 
+              },
             {
                 path:"/about",
                 element:<About/>
@@ -60,11 +63,14 @@ const appRouter=createBrowserRouter([
             {
                 path:"/cart",
                 element:<ShoppingCart/>
-            }
+            },
+            {
+                path:"/orderplaced",
+                element:<OrderPlaced/>
+            },
         ],
-        errorElement:<Error/>
-    },
-    
+        errorElement:<Error/>,
+    }, 
 ]);
 
 

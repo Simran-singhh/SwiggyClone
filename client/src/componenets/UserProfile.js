@@ -10,7 +10,7 @@ export default class UserProfile extends React.Component{
     }
 
     componentDidMount(){
-        console.log("child component did mount");
+        // console.log("child component did mount");
     }
     handleIncrement = () => {
         this.setState((prevState) => ({
