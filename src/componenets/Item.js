@@ -1,14 +1,31 @@
 import React, { useState } from 'react'
 import { CDN_URL } from '../utils/constants'
-import { addItem } from '../utils/cartSlice'
+import { addItem,removeitem } from '../utils/cartSlice'
 import { useDispatch } from 'react-redux'
-
+import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
 const Item = ({item}) => {
-    const{name,description,ratings,price,imageId,defaultPrice,isVeg}=item?.card?.info
+    const{name,description,ratings,price,imageId,defaultPrice,isVeg,id}=item?.card?.info
+    const[quantity,setquantity]=useState(0);
+    const cartItems=useSelector((store)=>store.cart.items)
+    useEffect(() => {
+      if (cartItems&&cartItems[id]!=undefined){
+        setquantity(cartItems[id].quantity);
+        }
+    })
+    
+  
 const dispatch=useDispatch();
-   const handleAdditems=(item)=>{
-    dispatch(addItem(item));
-   }
+const handleAdditems=(item,val)=>{
+  dispatch(addItem(item));
+  setquantity(val+1)
+ }
+
+ const handleRemoveItem = (item,val) => {
+ dispatch(removeitem(item))
+ setquantity(val-1)
+}
+ 
 
 
 
@@ -35,9 +52,9 @@ const dispatch=useDispatch();
          <div className='w-3/12  '>
          
          <div className='absolute '>
-         <button className='py-2 px-5 mx-10 mt-[66px] shadow-sm rounded-md bg-white text-green-500' onClick={()=>handleAdditems(item)}>Add</button></div>
+        {quantity==0?( <button className='py-2 px-5 mx-10 mt-[66px] shadow-sm rounded-md bg-white text-green-500' onClick={()=>handleAdditems(item,quantity)}>Add</button>):(<div className='mx-10 mt-[66px] shadow-sm rounded-md bg-white text-green-500'> <button className='m-2' onClick={()=>handleRemoveItem(item,quantity)}>-</button><span className='px-1'>{quantity}</span><button className='m-2' onClick={()=>handleAdditems(item,quantity)}>+</button></div>)}</div>
          <img className='w-36 h-24 rounded-lg' src={CDN_URL+imageId}/>
-         </div>):(<div className='mr-16'> <button className='py-2 px-5  mx-4 my-8 rounded-md bg-white text-green-500 shadow-sm ' >Add</button></div>)
+         </div>):(<div className='mr-16'> {quantity==0?(<button className='py-2 px-5  mx-4 my-8 rounded-md bg-white text-green-500 shadow-sm ' onClick={()=>handleAdditems(item,quantity)}>Add</button>):(<div className='py-2 px-3 mx-4 my-8 rounded-md bg-white text-green-500 shadow-sm'> <button  onClick={()=>handleRemoveItem(item,quantity)}>-</button><span className='px-2'>{quantity}</span><button  onClick={()=>handleAdditems(item,quantity)}>+</button></div>)}</div>)
          }
 
      </div>)
