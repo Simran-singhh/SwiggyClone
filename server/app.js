@@ -7,7 +7,7 @@ const passport=require('passport');
 const User = require('./Models/user');
 const cors = require('cors');
 const Cart = require('./Models/cart');
-const mongoDBUri =process.env.DB_URI||'mongodb+srv://simransinghsaaa:sEo34mzjEA9fAzyF@cluster0.i33frwa.mongodb.net/';
+const mongoDBUri =process.env.DB_URI;
 
 mongoose.connect(mongoDBUri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
