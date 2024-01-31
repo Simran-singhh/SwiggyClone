@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import Header from './componenets/Header';
 import Body from './componenets/Body';
-import About from './componenets/About';
+
 import Error from './componenets/Error';
 import RestaurantMenu from './componenets/RestaurantMenu';
 import ContactUs from './componenets/ContactUs';
@@ -47,10 +47,7 @@ const appRouter=createBrowserRouter([
                 path: '/login',
                 element: <Login />, 
               },
-            {
-                path:"/about",
-                element:<About/>
-            },
+           
             {
                 path:"/contact",
                 element:<ContactUs/>
